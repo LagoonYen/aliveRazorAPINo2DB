@@ -1,0 +1,69 @@
+﻿@page
+@model AliveStoreTemplate.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<article class="page">
+    <div class="container">
+        <div class="row">
+            <h4 class="ui dividing header">註冊本站會員</h4>
+            <div class="ui center aligned basic segment">
+                <form class="ui form" method="post">
+                    <div class="field">
+                        <label>Email</label>
+                        <input asp-for="Account" placeholder="請輸入電子信箱">
+                    </div>
+                    <div class="field">
+                        <label>password</label>
+                        <input type="password" asp-for="Password" placeholder="請輸入密碼">
+                    </div>
+                    <button class="ui button" type="submit" asp-page-handler="Register">註冊</button>
+                </form>
+                    <button class="ui button" type="button" asp-page="./Login">返回</button>
+            </div>
+        </div>
+    </div>
+    @if (ViewData["Message"] != null)
+        {
+            <script type="text/javascript">
+                window.onload = function () {
+                    alert("@ViewData["Message"]");
+                };
+            </script>
+        }
+</article>
+
+@*<script>
+    function Register(){
+        let account = $('#account').val()
+        let password = $('#password').val()
+
+        let formData = {
+            "account": account,
+            "password": password
+        };
+
+        $.ajax({
+            type:"Post",
+            url:"@Url.Action("Register","MemberInfo")",
+            data : JSON.stringify(formData),
+            // 告訴jQuery不要去處理發送的資料
+            processData : false, 
+            // 告訴jQuery不要去設定Content-Type請求頭
+            contentType : 'application/json;charset=UTF-8', //contentType很重要 
+            dataType:"json",
+            success:function(response){
+                console.log("成功")
+                location.href = "./BuildPersonalPage"
+            },
+            error:function(response){
+                console.log("失敗", response)
+                $('#notice').html(response.responseText)
+            }
+        })
+    }
+</script>*@
+
+
+

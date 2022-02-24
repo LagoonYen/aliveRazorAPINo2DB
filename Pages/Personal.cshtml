@@ -1,0 +1,83 @@
+﻿
+@page
+@model AliveStoreTemplate.Pages.PersonalModel
+@{
+    ViewData["Title"] = "Personal";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<div>
+    <div class="container">
+        <div class="row">
+            <h4 >個人資料列表</h4>
+            <table class="ui celled table my-3"> 
+                <thead>
+                
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>帳號</td>
+                        <td>@Model.member.Account</td>
+                    </tr>
+                    <tr>
+                        <td>暱稱</td>
+                        <td>@Model.member.NickName</td>
+                    </tr>
+                    <tr>
+                        <td>電話號碼</td>
+                        <td>@Model.member.PhoneNumber</td>
+                    </tr>
+                    <tr>
+                        <td>信箱</td>
+                        <td>@Model.member.Email</td>
+                    </tr>
+                    <tr>
+                        <td>性別</td>
+                        <td>@Model.member.Sex</td>
+                    </tr>
+                    <tr>
+                        <td>上次更新時間</td>
+                        <td>@Model.member.UpdateTime</td>
+                    </tr>
+                    <tr>
+                        <td>帳號</td>
+                        <td>@Model.member.Account</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <a class="ui button center" style="max-width:100px" asp-page="./BuildPersonalPage">修改</a>
+        </div>
+    </div>
+</div>
+@*<script>
+    //$(function(){
+    //    console.log("測試")
+    //    $.ajax({
+    //        type:"Get",
+    //        url:"@Url.Action("MemberInfo","MemberInfo")",
+    //        dataType:"json",
+    //        success:function(response){
+    //            var data = response.results[0]
+    //            $('#account').html((data.account) ? data.account : "無")
+    //            $('#nickName').html((data.nickName) ? data.nickName : "無")
+    //            $('#phoneNumber').html((data.phoneNumber) ? data.phoneNumber : "無")
+    //            $('#email').html((data.email) ? data.email : "無")
+    //            $('#registerTime').html((data.registerTime) ? data.registerTime : "無")
+    //            $('#updateTime').html((data.updateTime) ? data.updateTime : "無")
+    //            $('#sex').html((data.sex) ? data.sex : "無")
+    //        },
+    //        error:function(response){
+    //            //location.href = "./Login"
+    //        }
+    //    })
+    //})
+
+    //function goRewrite(){
+    //    location.href = "/BuildPersonalPage"
+    //}
+
+</script>
+*@
