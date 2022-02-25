@@ -47,7 +47,15 @@ namespace AliveStoreTemplate.Repository
 
         public void PatchProduct(ProductList product)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var collection = new DRole("PokemonCardInfo");
+                collection.GetOp("Product").Update(product.ProductId, product);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public IEnumerable<ProductList> SearchProduct(string category, string subCategory)

@@ -17,5 +17,7 @@ namespace AliveStoreTemplate.Services
         public BaseResponseModel InsertProduct(ProductReqModel Req);
 
         public BaseResponseModel DeleteProduct(DeleteProductReqModel Req);
+
+        public BaseQueryModel<ProductList> SearchProductInfo(string SearchString);
     }
 }

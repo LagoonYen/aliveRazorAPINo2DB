@@ -80,6 +80,22 @@ namespace AliveStoreTemplate.Service
                     }
                 }
 
+                for(int i = 0; i < Req.Abilities.Count; i++)
+                {
+                    if(Req.Abilities[i].AbilityName == null && Req.Abilities[i].AbilityDesc == null)
+                    {
+                        Req.Abilities.Remove(Req.Abilities[i]);
+                    }
+                }
+
+                for (int i = 0; i < Req.Moves.Count; i++)
+                {
+                    if (Req.Moves[i].MoveName == null && Req.Moves[i].MoveDesc == null)
+                    {
+                        Req.Moves.Remove(Req.Moves[i]);
+                    }
+                }
+
                 ProductList product = new ProductList
                 {
                     ProductId = "Product" + Guid.NewGuid().ToString("N"),
@@ -111,9 +127,73 @@ namespace AliveStoreTemplate.Service
             }
         }
 
-        public BaseResponseModel PatchProductAllInfo(ProductReqModel productReqModel)
+        public BaseResponseModel PatchProductAllInfo(ProductReqModel Req)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                //先抓舊的ImgUrl
+                var fileName = Req.ImgUrl;
+
+                if (Req.CardImg != null)
+                {
+                    //新檔案的類別名稱
+                    var fileExtension = Req.CardImg.FileName.Split(".").TakeLast(1).FirstOrDefault();
+                    //設置新增卡片名稱 有舊的→取代 沒有→新增
+                    fileName = !string.IsNullOrWhiteSpace(fileName) ? fileName : $"img/{Guid.NewGuid().ToString()}.{fileExtension}";
+                    //新增圖片進檔案
+                    using (var stream = new FileStream($"./wwwroot/" + fileName, FileMode.Create))
+                    {
+                        Req.CardImg.CopyTo(stream);
+                    }
+                }
+
+                for (int i = 0; i < Req.Abilities.Count; i++)
+                {
+                    if (Req.Abilities[i].AbilityName == null && Req.Abilities[i].AbilityDesc == null)
+                    {
+                        Req.Abilities.Remove(Req.Abilities[i]);
+                    }
+                }
+
+                for (int i = 0; i < Req.Moves.Count; i++)
+                {
+                    if (Req.Moves[i].MoveName == null && Req.Moves[i].MoveDesc == null)
+                    {
+                        Req.Moves.Remove(Req.Moves[i]);
+                    }
+                }
+
+                ProductList productList = new ProductList()
+                {
+                    ProductId = Req.Id,
+                    Category = Req.Category,
+                    Subcategory = Req.Subcategory,
+                    CardName = Req.CardName,
+                    Abilities = Req.Abilities,
+                    Moves = Req.Moves,
+                    HP = Req.HP,
+                    Price = Req.Price,
+                    Inventory = Req.Inventory,
+                    ImgUrl = fileName,
+                    UpdateTime = DateTime.Now
+                };
+
+
+                _productRepository.PatchProduct(productList);
+                return new BaseResponseModel
+                {
+                    Message = "修改完成",
+                    StatusCode = HttpStatusCode.OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel
+                {
+                    Message = ex.Message,
+                    StatusCode = HttpStatusCode.BadRequest
+                };
+            }
         }
 
         public BaseQueryModel<ProductResultModel> Product_CategoryList()
@@ -179,6 +259,11 @@ namespace AliveStoreTemplate.Service
                     StatusCode = HttpStatusCode.BadRequest
                 };
             }
+        }
+
+        public BaseQueryModel<ProductList> SearchProductInfo(string SearchString)
+        {
+            throw new NotImplementedException();
         }
     }
 }

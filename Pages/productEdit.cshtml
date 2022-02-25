@@ -14,32 +14,62 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="ProductResult.ProductId" type="hidden" />
                     <div class="form-group my-2">
-                        <label asp-for="ProductResult.Category" class="control-label"></label>
+                        <label class="">主分類</label>
                         <input asp-for="ProductResult.Category" class="form-control" />
-                        <span asp-validation-for="ProductResult.Category" class="text-danger"></span>
                     </div>
                     <div class="form-group my-2">
-                        <label asp-for="ProductResult.Subcategory" class="control-label"></label>
+                        <label class="">次分類</label>
                         <input asp-for="ProductResult.Subcategory" class="form-control" />
-                        <span asp-validation-for="ProductResult.Subcategory" class="text-danger"></span>
                     </div>
                     <div class="form-group my-2">
-                        <label asp-for="ProductResult.CardName" class="control-label"></label>
+                        <label class="">卡片名稱</label>
                         <input asp-for="ProductResult.CardName" class="form-control" />
-                        <span asp-validation-for="ProductResult.CardName" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <button class="ui button yellow" type="button" onclick="AddNewAbility()">新增特性</button>
+                        <button class="ui button green" type="button" onclick="AddNewMove()">新增技能</button>
+                    </div>
+                    <div class="form-group my-4" id="abilityDiv">
+                        @if(@Model.ProductResult.Abilities != null){
+                            @for(var x = 0; x < @Model.ProductResult.Abilities.Count; x++)
+                            {
+                                <div id="ability+@x">
+                                    <label class="">特性名稱</label>
+                                    <input asp-for="ProductResult.Abilities[x].AbilityName" class="form-control"/>
+                                    <label class="">特性解釋</label>
+                                    <input asp-for="ProductResult.Abilities[x].AbilityDesc" class="form-control"/>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="form-group my-4" id="moveDiv">
+                        @if(@Model.ProductResult.Moves != null){
+                            @for(var x = 0; x < @Model.ProductResult.Moves.Count; x++)
+                            {
+                                <div id="move+@x">
+                                    <label class="">招式名稱</label>
+                                    <input asp-for="ProductResult.Moves[x].MoveName" class="form-control"/>
+                                    <label class="">招式解釋</label>
+                                    <input asp-for="ProductResult.Moves[x].MoveDesc" class="form-control"/>
+                                </div>
+                            }
+                        }
+                    </div>
+                    
+                    <div class="form-group my-2">
+                        <label class="">血量</label>
+                        <input asp-for="ProductResult.HP" class="form-control" />
                     </div>
                     <div class="form-group my-2">
-                        <label asp-for="ProductResult.Price" class="control-label"></label>
+                        <label class="">售價</label>
                         <input asp-for="ProductResult.Price" class="form-control" />
-                        <span asp-validation-for="ProductResult.Price" class="text-danger"></span>
                     </div>
                     <div class="form-group my-2">
-                        <label asp-for="ProductResult.Inventory" class="control-label"></label>
+                        <label class="">庫存</label>
                         <input asp-for="ProductResult.Inventory" class="form-control" />
-                        <span asp-validation-for="ProductResult.Inventory" class="text-danger"></span>
                     </div>
                     <div class="form-group my-2">
-                        <label asp-for="ProductResult.ImgUrl" class="control-label"></label>
+                        <label class="">圖片上傳</label>
                         <input asp-for="ProductResult.ImgUrl" type="hidden" />
                         <input type="file" asp-for="CardImg" id="cardImgInput" accept=".jpg, .jpeg, .png">
 					    <img id="previewCardImgInput" asp-append-version="true" src="@Model.ProductResult.ImgUrl" style="max-width:140px; max-height:450px"/>
@@ -76,4 +106,36 @@
 			reader.readAsDataURL(input.files[0]);
 		}
 	}
+
+    function AddNewAbility(){
+        let x = ($("#abilityDiv").children().length != 0) ? parseInt($("#abilityDiv").children().last("div").attr("id").substring(7)) + 1 : 0
+        console.log("New", x)
+        if(x>3){
+            console.log("新增太多特性了")
+            return;
+        }
+        $("#abilityDiv").append(`
+                        <div id="ability${x}">
+                            <label class="">特性名稱</label>
+                            <input name="ProductResult.Abilities[${x}].AbilityName" class="form-control ablityName"/>
+                            <label class="">特性解釋</label>
+                            <input name="ProductResult.Abilities[${x}].AbilityDesc" class="form-control ablityDesc"/>
+                        </div>`)
+    }
+
+    function AddNewMove(){
+        let x = parseInt($("#moveDiv").children().last("div").attr("id").substring(4)) + 1
+        console.log("New", x)
+        if(x>3){
+            console.log("新增太多招式了")
+            return;
+        }
+        $("#moveDiv").append(`
+                        <div id="move${x}">
+                            <label class="">招式名稱</label>
+                            <input name="ProductResult.Moves[${x}].MoveName" class="form-control moveName" />
+                            <label class="">招式解釋</label>
+                            <input name="ProductResult.Moves[${x}].MoveDesc" class="form-control moveDesc" />
+                        </div>`)
+    }
 </script>

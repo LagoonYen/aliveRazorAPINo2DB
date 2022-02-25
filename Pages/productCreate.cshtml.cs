@@ -54,10 +54,7 @@ namespace AliveStoreTemplate.Pages
             //    ImgUrl.CopyTo(fileStream);
             //}
 
-            //return RedirectToPage("./productIndex");
-            return null;
-
-
+            return RedirectToPage("./productIndex");
         }
     }
 }
