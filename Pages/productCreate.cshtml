@@ -1,0 +1,150 @@
+﻿@page
+@model AliveStoreTemplate.Pages.productCreateModel
+@{
+    ViewData["Title"] = "productCreate";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<article class="my-5">
+    <div class="container">
+        <div class="row">
+            <h1 class="">寶可夢卡片新增</h1>
+            <div class="col-12 px-0 mr-2" style="overflow-y:auto;max-height:600px;">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="form-group my-2">
+                        <label class="">主分類</label>
+                        <input asp-for="ProductReq.Category" class="form-control" />
+                    </div>
+                    <div class="form-group my-2">
+                        <label class="">次分類</label>
+                        <input asp-for="ProductReq.Subcategory" class="form-control" />
+                    </div>
+                    <div class="form-group my-2">
+                        <label class="">卡片名稱</label>
+                        <label asp-for="ProductReq.CardName" class="control-label"></label>
+                        <input asp-for="ProductReq.CardName" class="form-control" />
+                    </div>
+                    <div>
+                        <button class="ui button yellow" type="button" onclick="AddNewAbility()">新增特性</button>
+                        <button class="ui button green" type="button" onclick="AddNewMove()">新增技能</button>
+                    </div>
+                    <div class="form-group my-4" id="abilityDiv">
+                        <h4>特性</h4>
+                        <div id="ability0">
+                            <label class="">特性名稱</label>
+                            <input asp-for="ProductReq.Abilities[0].AbilityName" class="form-control ablityName"/>
+                            <label class="">特性解釋</label>
+                            <input asp-for="ProductReq.Abilities[0].AbilityDesc" class="form-control ablityDesc"/>
+                        </div>
+                    </div>
+                    <div class="form-group my-4" id="moveDiv">
+                        <h4>招式</h4>
+                        <div id="move0">
+                            <label class="">招式名稱</label>
+                            <input asp-for="ProductReq.Moves[0].MoveName" class="form-control moveName" />
+                            <label class="">招式解釋</label>
+                            <input asp-for="ProductReq.Moves[0].MoveDesc" class="form-control moveDesc" />
+                        </div>
+                    </div>
+                    <div class="form-group my-2">
+                        <label class="">血量</label>
+                        <input asp-for="ProductReq.HP" class="form-control" />
+                    </div>
+                    <div class="form-group my-2">
+                        <label class="">售價</label>
+                        <input asp-for="ProductReq.Price" class="form-control" />
+                    </div>
+                    <div class="form-group my-2">
+                        <label class="">庫存</label>
+                        <input asp-for="ProductReq.Inventory" class="form-control" />
+                    </div>
+                    <div class="form-group my-2">
+                        <label class="">圖片上傳</label>
+                        <input type="file" asp-for="ProductReq.CardImg" id="cardImgInput" accept=".jpg, .jpeg, .png">
+					    <img id="previewCardImgInput" src="#" style="max-width:140px; max-height:450px"/>
+                    </div>
+                    <div class="form-group my-2">
+                        <input class="ui button" type="submit" onclick="BeforeSend()" value="Create"/>
+                    </div>
+                </form>
+                
+
+            </div>
+        </div>
+    </div>
+    @if (ViewData["Message"] != null)
+        {
+            <script type="text/javascript">
+                window.onload = function () {
+                    alert("@ViewData["Message"]");
+                };
+            </script>
+        }
+</article>
+<script>
+    //圖片上傳後預覽圖片
+	$("#cardImgInput").change(function(){
+		readURL(this);
+	})
+
+	function readURL(input){
+		if(input.files && input.files[0]){
+			var reader = new FileReader();
+			reader.onload = function (e){
+				$("#previewCardImgInput").attr('src',e.target.result);
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+
+    function AddNewAbility(){
+        let x = parseInt($("#abilityDiv").children().last("div").attr("id").substring(7)) + 1
+        console.log("New", x)
+        if(x>3){
+            console.log("新增太多特性了")
+            return;
+        }
+        $("#abilityDiv").append(`
+                        <div id="ability${x}">
+                            <label class="">特性名稱</label>
+                            <input name="ProductReq.Abilities[${x}].AbilityName" class="form-control ablityName"/>
+                            <label class="">特性解釋</label>
+                            <input name="ProductReq.Abilities[${x}].AbilityDesc" class="form-control ablityDesc"/>
+                        </div>`)
+    }
+
+    function AddNewMove(){
+        let x = parseInt($("#moveDiv").children().last("div").attr("id").substring(4)) + 1
+        console.log("New", x)
+        if(x>3){
+            console.log("新增太多招式了")
+            return;
+        }
+        $("#moveDiv").append(`
+                        <div id="move${x}">
+                            <label class="">招式名稱</label>
+                            <input name="ProductReq.Moves[${x}].MoveName" class="form-control moveName" />
+                            <label class="">招式解釋</label>
+                            <input name="ProductReq.Moves[${x}].MoveDesc" class="form-control moveDesc" />
+                        </div>`)
+    }
+
+    //可以抓到我要的元素?
+    function BeforeSend(){
+        let x = $("#abilityDiv").children().length
+        let y = $("#moveDiv").children().length
+
+        $("#abilityDiv > div").each(function( index ) {
+            let name = $(this).find(".ablityName").val()
+            let desc = $(this).find(".ablityDesc").val()
+            console.log(name, desc)
+            let obj = {
+                'ablityName':name,
+                'ablityDesc':desc
+            }
+            console.log(obj)
+        });
+
+    }
+
+</script>

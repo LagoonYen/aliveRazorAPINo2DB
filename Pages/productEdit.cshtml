@@ -1,0 +1,79 @@
+﻿@*@page "{productId}"*@
+@page
+@model AliveStoreTemplate.Pages.productEditModel
+@{
+    ViewData["Title"] = "productEdit";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<article class="my-5">
+    <div class="container">
+        <div class="row">
+            <h1 class="">寶可夢卡片編輯</h1>
+            <div class="col-12 px-0 mr-2" style="overflow-y:auto;max-height:600px;">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="ProductResult.ProductId" type="hidden" />
+                    <div class="form-group my-2">
+                        <label asp-for="ProductResult.Category" class="control-label"></label>
+                        <input asp-for="ProductResult.Category" class="form-control" />
+                        <span asp-validation-for="ProductResult.Category" class="text-danger"></span>
+                    </div>
+                    <div class="form-group my-2">
+                        <label asp-for="ProductResult.Subcategory" class="control-label"></label>
+                        <input asp-for="ProductResult.Subcategory" class="form-control" />
+                        <span asp-validation-for="ProductResult.Subcategory" class="text-danger"></span>
+                    </div>
+                    <div class="form-group my-2">
+                        <label asp-for="ProductResult.CardName" class="control-label"></label>
+                        <input asp-for="ProductResult.CardName" class="form-control" />
+                        <span asp-validation-for="ProductResult.CardName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group my-2">
+                        <label asp-for="ProductResult.Price" class="control-label"></label>
+                        <input asp-for="ProductResult.Price" class="form-control" />
+                        <span asp-validation-for="ProductResult.Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group my-2">
+                        <label asp-for="ProductResult.Inventory" class="control-label"></label>
+                        <input asp-for="ProductResult.Inventory" class="form-control" />
+                        <span asp-validation-for="ProductResult.Inventory" class="text-danger"></span>
+                    </div>
+                    <div class="form-group my-2">
+                        <label asp-for="ProductResult.ImgUrl" class="control-label"></label>
+                        <input asp-for="ProductResult.ImgUrl" type="hidden" />
+                        <input type="file" asp-for="CardImg" id="cardImgInput" accept=".jpg, .jpeg, .png">
+					    <img id="previewCardImgInput" asp-append-version="true" src="@Model.ProductResult.ImgUrl" style="max-width:140px; max-height:450px"/>
+                    </div>
+                    <div class="form-group my-2">
+                        <input type="submit" value="Edit" class="btn btn-primary" asp-page-handler="PatchProductAllInfo"/>
+                        <button class="btn btn-warning" style="color:yellow"><a asp-page="./productIndex">返回列表</a></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @if (ViewData["Message"] != null)
+        {
+            <script type="text/javascript">
+                window.onload = function () {
+                    alert("@ViewData["Message"]");
+                };
+            </script>
+        }
+</article>
+<script>
+    //圖片上傳後預覽圖片
+	$("#cardImgInput").change(function(){
+		readURL(this);
+	})
+
+	function readURL(input){
+		if(input.files && input.files[0]){
+			var reader = new FileReader();
+			reader.onload = function (e){
+				$("#previewCardImgInput").attr('src',e.target.result);
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+</script>

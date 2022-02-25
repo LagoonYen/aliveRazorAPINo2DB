@@ -160,7 +160,7 @@ namespace AliveStoreTemplate.Service
                     StatusCode = HttpStatusCode.OK
                 };
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }

@@ -78,48 +78,15 @@
             <a asp-page="./Login"  class="btn-self"><i class="icon-star"></i><em>Login</em></a>
             <a asp-page="./Personal" class="btn-self"><i class="icon-cate"></i><em>Personal</em></a>
             <a asp-page="./Index" class="btn-self"><i class="icon-search"><em>swagger</em></i></a>
-            <a id="btn-service" href="#lightbox-service" class="btn-self"><i class="icon-service"></i><em>service</em></a>
+            <a asp-page="./productIndex" class="btn-self"><i class="icon-list"><em>productIndex</em></i></a>
             <a asp-page="inquire" class="btn-self"><i class="icon-list"></i><em>order list</em></a>
             <a asp-page="cart" class="btn-self"><i class="icon-buy"></i><em>cart</em><span class="cart-count spancc" id="spancc">0</span></a>
             <a id="btn-menu" class="btn-self lg-hide md-hide sm-show xs-show"><i class="icon-menu"></i><em>nav</em></a>
         </section>
         </section>
         <!--nav-main 主导览列-->
-        <nav class="nav-main">
-            <ul> 
-                <li>
-                    <a asp-page="category">蓝芽喇叭</a>
-                    <ul class="lv2">
-                        <li><a asp-page="category">喇叭1</a></li>
-                        <li><a asp-page="category">喇叭2</a></li>
-                        <li><a asp-page="category">喇叭3</a></li>
-                        <li><a asp-page="category">喇叭4</a></li>
-                        <li><a asp-page="category">喇叭5</a></li>
-                        <li><a asp-page="category">喇叭6</a></li>
-                        <li><a asp-page="category">喇叭7</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a asp-page="category">手机</a>
-                    <ul class="lv2">
-                        <li><a asp-page="category">手机1</a></li>
-                        <li><a asp-page="category">手机2</a></li>
-                        <li><a asp-page="category">手机3</a></li>
-                        <li><a asp-page="category">手机4</a></li>
-                        <li><a asp-page="category">手机5</a></li>
-                        <li><a asp-page="category">手机6</a></li>
-                        <li><a asp-page="category">手机7</a></li>
-                    </ul>
-                </li>
-                <li><a asp-page="category">iPhone</a></li>
-                <li><a asp-page="category">键盘</a></li>
-                <li><a asp-page="category">滑鼠</a></li>
-                <li><a asp-page="category">视讯镜头</a></li>
-                <li><a asp-page="category">监控设备</a></li>
-                <li><a asp-page="category">光碟机</a></li>
-                <li><a asp-page="category">MP3</a></li>
-                <li><a asp-page="category">Wifi</a></li>
-            </ul>
+        <nav class="nav-main" id="layoutProductBar">
+            
         </nav>
         <!--/nav-main 主导览列-->
     </section>
@@ -194,6 +161,45 @@
     @* pageJS *@
     <script type="text/javascript">
         $(function () {
+            $.ajax({
+                type:"Get",
+                url:"@Url.Action("Product_CategoryList","Product")",
+                dataType:"json",
+                success:function(response){
+                    console.log("成功", response.results)
+                    //$("#layoutProductBar").empty()
+                    let CategoryBar = $(`<ul></ul>`)
+                    response.results.forEach(x => {
+                        //底層
+                        let SubCategory = $(`<ul class="lv2"></ul>`)
+                        x.subCategory.forEach(y => {
+                            SubCategory.append(`<li><a onclick="goCategory()" data-value="${y}">${y}</a></li>`)
+                        })
+
+                        //中層
+                        CategoryBar.append(`<li><a class="Cate" onclick="goCategory()" data-value="${x["category"]}">${x["category"]}</a>` + SubCategory[0].outerHTML +`</li>`)
+                    })
+
+                    $("#layoutProductBar").append(CategoryBar)
+
+                    // nav 導覽列開關
+                    $(".nav-main a").hover(function () {
+                        $(this).parent().children(".lv2").show();
+                    }, function () {
+                        $(this).parent().children(".lv2").hide();
+                    });
+                    $(".nav-main .lv2").hover(function () {
+                        $(this).show();
+                    }, function () {
+                        $(this).hide();
+                    });
+                },
+                error:function(response){
+                    console.log("失敗", response)
+                }
+            })
+
+
             // 手機版選單
             // Initialize Slidebars
             var controller = new slidebars();
@@ -224,17 +230,17 @@
                 }
             });
 
-            // nav 導覽列開關
-            $(".nav-main a").hover(function () {
-                $(this).parent().children(".lv2").show();
-            }, function () {
-                $(this).parent().children(".lv2").hide();
-            });
-            $(".nav-main .lv2").hover(function () {
-                $(this).show();
-            }, function () {
-                $(this).hide();
-            });
+            //// nav 導覽列開關
+            //$(".nav-main a").hover(function () {
+            //    $(this).parent().children(".lv2").show();
+            //}, function () {
+            //    $(this).parent().children(".lv2").hide();
+            //});
+            //$(".nav-main .lv2").hover(function () {
+            //    $(this).show();
+            //}, function () {
+            //    $(this).hide();
+            //});
 
             //fa-mobile 手機導覽列開關
             $(".fa-mobile a").click(function () {
@@ -282,6 +288,16 @@
             $("#spancc").html(cc);
             $(".spancc").html(cc);
         });
+
+    function goCategory(){
+        let $this = $(event.target)
+        let parent = $this.parent().parent().prev().data("value")
+        let child = $this.data("value")
+        let category = (typeof(parent) == "undefined") ? child : parent
+        let subCategory = (typeof(parent) == "undefined") ? "" : child
+        console.log("呼叫取值", category, subCategory)
+        window.location.href = "Category?category="+category+"&subCategory="+subCategory
+    }
     </script>
 
 

@@ -42,7 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Api\Controller\" />
     <Folder Include="Connected Services\" />
     <Folder Include="Library\" />
   </ItemGroup>

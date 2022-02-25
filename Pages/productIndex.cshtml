@@ -1,0 +1,94 @@
+﻿@page
+@model AliveStoreTemplate.Pages.ProductIndexModel
+@{
+    ViewData["Title"] = "productIndex";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<article class="my-5">
+    <div class="container">
+        <div class="row">
+            <h1 class="">寶可夢卡牌清單</h1>
+            <button class="col-2 my-2 btn-success" ><a asp-page="./productCreate">建立新卡</a></button>
+            <div class="col-12 px-0 mr-2" style="overflow-y:auto;max-height:550px;">
+                <table class="table table-striped table-bordered table-hover table-active">
+                    <thead class="table-info">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CardList[0].Category)
+                            </th >
+                            <th>
+                                @Html.DisplayNameFor(model => model.CardList[0].Subcategory)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CardList[0].CardName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CardList[0].ImgUrl)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CardList[0].Price)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CardList[0].Inventory)
+                            </th>
+                            <th>
+                                上次修改Time
+                            </th>
+                            <th>
+                                操作功能
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(@Model.CardList != null){
+                            @foreach (var item in @Model.CardList)
+                            {
+
+                                <tr class="table-warning">
+                                    <td>
+                                        @item.Category
+                                    </td>
+                                    <td>
+                                        @item.Subcategory
+                                    </td>
+                                    <td>
+                                        @item.CardName
+                                    </td>
+                                    <td>
+                                        @item.ImgUrl
+                                        <img asp-append-version="true" src="@item.ImgUrl"  style="max-width:42px; max-height:150px"/>
+                                    </td>
+                                    <td>
+                                        @item.Price
+                                    </td>
+                                    <td>
+                                        @item.Inventory
+                                    </td>
+                                    <td>
+                                        @item.UpdateTime
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-success"><a asp-page="./productEdit" asp-route-productId="@item.ProductId"  style="color:white;text-decoration:none;">編輯</a></button> |
+                                        <form method="post">
+                                            <button class="btn btn-danger" asp-page-handler="DeleteProduct">刪除</button>
+                                            <input name="productId" value="@item.ProductId" type="hidden">
+                                            <input name="ImgUrl" value="@item.ImgUrl" type="hidden">
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @if (ViewData["Message"] != null)
+        {
+            <script type="text/javascript">
+                window.onload = function () {
+                    alert("@ViewData["Message"]");
+                };
+            </script>
+        }
+</article>

@@ -93,22 +93,22 @@ namespace AliveStoreTemplate.Model.DTOModel
     /// <summary>
     /// Product相關
     /// </summary>
-    //public class ProductListReqModel
-    //{
-    //    public string Category { get; set; }
-    //    public string Subcategory { get; set; }
-    //}
+    public class SearchProductReqModel
+    {
+        public string Category { get; set; }
+        public string Subcategory { get; set; }
+    }
 
-    //public class ProductInfoReqModel
-    //{
-    //    public int product_id { get; set; }
-    //}
+    public class ProductInfoReqModel
+    {
+        public string ProductId { get; set; }
+    }
 
-    //public class DeleteProductReqModel
-    //{
-    //    public int productId { get; set;}
-    //    public string ImgUrl { get; set; }
-    //}
+    public class DeleteProductReqModel
+    {
+        public int productId { get; set; }
+        public string ImgUrl { get; set; }
+    }
 
     /// <summary>
     /// Shopcar相關
@@ -153,22 +153,21 @@ namespace AliveStoreTemplate.Model.DTOModel
     //    public int UID { get; set; }
     //}
 
-    //public class ProductReqModel
-    //{
-    //    public int Id { get; set; }
-    //    [Required]
-    //    public string Category { get; set; }
-    //    [Required]
-    //    public string Subcategory { get; set; }
-    //    [Required]
-    //    public string CardName { get; set; }
-    //    [Required]
-    //    public string Description { get; set; }
-    //    [Required]
-    //    public int Price { get; set; }
-    //    [Required]
-    //    public int Inventory { get; set; }
-    //    public string ImgUrl { get; set; }
-    //    public IFormFile CardImg { get; set; }
-    //}
+    public class ProductReqModel
+    {
+        public string Id { get; set; }
+        [Required]
+        public string Category { get; set; }
+        [Required]
+        public string Subcategory { get; set; }
+        [Required]
+        public string CardName { get; set; }
+        public List<Ability> Abilities { get; set; }
+        public List<Move> Moves { get; set; }
+        public int HP { get; set; }
+        public int Price { get; set; }
+        public int Inventory { get; set; }
+        public string ImgUrl { get; set; }
+        public IFormFile CardImg { get; set; }
+    }
 }
