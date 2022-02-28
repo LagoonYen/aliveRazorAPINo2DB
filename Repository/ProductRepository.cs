@@ -15,6 +15,8 @@ namespace AliveStoreTemplate.Repositories
 
         public void InsertProduct(ProductList product);
 
-        public void DeleteProduct(int productId);
+        public void DeleteProduct(string productId);
+
+        public IEnumerable<ProductList> SearchProductInfo(string SearchString);
     }
 }

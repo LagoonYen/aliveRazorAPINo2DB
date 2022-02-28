@@ -106,7 +106,7 @@ namespace AliveStoreTemplate.Model.DTOModel
 
     public class DeleteProductReqModel
     {
-        public int productId { get; set; }
+        public string ProductId { get; set; }
         public string ImgUrl { get; set; }
     }
 

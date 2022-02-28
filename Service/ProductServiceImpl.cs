@@ -22,7 +22,33 @@ namespace AliveStoreTemplate.Service
 
         public BaseResponseModel DeleteProduct(DeleteProductReqModel Req)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var productId = Req.ProductId;
+                var ImgUrl = Req.ImgUrl;
+
+                //刪除卡片路徑的卡
+                if (ImgUrl != null)
+                {
+                    var path = $"./wwwroot/" + ImgUrl;
+                    File.Delete(path);
+                }
+
+                _productRepository.DeleteProduct(productId);
+                return new BaseResponseModel
+                {
+                    Message = "修改完成",
+                    StatusCode = HttpStatusCode.OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel
+                {
+                    Message = ex.Message,
+                    StatusCode = HttpStatusCode.BadRequest
+                };
+            }
         }
 
         public BaseQueryModel<ProductList> GetProductInfoById(string ProductId)
@@ -263,7 +289,25 @@ namespace AliveStoreTemplate.Service
 
         public BaseQueryModel<ProductList> SearchProductInfo(string SearchString)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var productList = _productRepository.SearchProductInfo(SearchString);
+                return new BaseQueryModel<ProductList>
+                {
+                    Results = productList,
+                    Message = String.Empty,
+                    StatusCode = HttpStatusCode.OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseQueryModel<ProductList>
+                {
+                    Results = null,
+                    Message = ex.Message,
+                    StatusCode = HttpStatusCode.BadRequest
+                };
+            }
         }
     }
 }

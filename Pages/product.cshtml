@@ -1,16 +1,17 @@
-﻿@page
+﻿@page 
 @model AliveStoreTemplate.Pages.productModel
 @{
-    ViewData["Title"] = "product";
+    ViewData["Title"] = "category";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-
 
 <article class="page product">
     <div class="content-con">
         @*path 路径*@
         <section class="path">
-            <a href="/">HOME</a><a href="category">滑鼠</a><a href="category">Logitech</a>
+            <a href="/">HOME</a>
+            <a asp-page="category" asp-route-category="@Model.CardInfo.Category" asp-route-subCategory="">@Model.CardInfo.Category</a>
+            <a asp-page="category" asp-route-category="@Model.CardInfo.Category" asp-route-subCategory="@Model.CardInfo.Subcategory">@Model.CardInfo.Subcategory</a>
             @*<a href="/">HOME</a><a href="category?pid=<%=FCate.Id %>"><%=FCate.Name %></a><a href="category?pid=<%=FCate.Id %>"><%=Cate.Name %></a>*@
         </section>
         @* /path 路径*@
@@ -18,148 +19,56 @@
         <article class="product">
             @*product-photo 产品照片*@
             <section class="product-photo">
-                @*                    <ul class="photo-menu">
-                    <li class="active">
-                        <img src="img/ill_prod1.png" alt="" />
-                    </li>
-                    <li>
-                        <img src="img/ill_prod2.png" alt="" />
-                    </li>
-                    <li>
-                        <img src="img/ill_prod3.png" alt="" />
-                    </li>
-                </ul>*@
                 <figure class="photo-view">
-                    <img src="img/ill_prod1.png" />
-                    @*<img src="<%=MainImage %>" alt="" />*@
+                    
+                    <img src="@Model.CardInfo.ImgUrl" />
+                    
                 </figure>
             </section>
-            @*product-info 产品资讯*@
+            @*product-info 產品資訊*@
             <section class="product-info">
                 <div class="info-con">
-                    <p class="info-category">滑鼠</p>
-                    <h2 class="info-tit">产品名称</h2>
-                    <p class="info-intro">产品说明产品说明产品说明</p>
-                    <p class="info-price">
-                        <span class="price-orignal">100</span><span class="price-discount">90</span>
-                    </p>
-                    @*<span class="price-count">500</span></p>
-                    @*<p class="info-category"><%=Cate.Name %></p>
-                    <h2 class="info-tit"><%=Title %></h2>
-                    <p class="info-intro"><%=SubTitle %></p>
-                    <p class="info-price"><span class="price-orignal"><%=OriginalPrice %></span><span class="price-discount"><%=Price %></span>@*<span class="price-count">500</span></p>*@
-                    <section class="forms-basic info-spec">
-                        <asp:DropDownList ID="ddlSpec" runat="server" ClientIDMode="Static" onchange="setSpecMaxCount(this.options[this.options.selectedIndex].value);" Width="100%">
-                        </asp:DropDownList>
-                        <asp:HiddenField ID="hfSpecId" ClientIDMode="Static" runat="server" Value="" />
-
-                        <select class="inp-block" id="ddlQvt">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
+                    <form class="ui form" method="post">
+                        <h2 class="info-tit" id="info-tit">@Model.CardInfo.CardName</h2>
+                        <input type="hidden" asp-for="@Model.CardInfo.ProductId"/>
+                        @foreach(var item in @Model.CardInfo.Abilities)
+                        {
+                            <p style="color:red">特性：</p><p class="info-intro" id="info-intro">@item.AbilityName</p>
+                            <p class="info-intro" id="info-intro">@item.AbilityDesc</p>
+                        }
+                        @foreach(var item in @Model.CardInfo.Moves)
+                        {
+                            <p style="color:green">招式：</p><p class="info-intro" id="info-intro">@item.MoveName</p>
+                            <p class="info-intro" id="info-intro">@item.MoveDesc</p>
+                        }
+                        <p class="info-intro" id="info-intro">血量：@Model.CardInfo.HP</p>
+                        <p class="info-price">
+                            <span class="price-orignal" id="info-price">1500</span><span class="price-discount" id="info-secprice">@Model.CardInfo.Price</span>
+                        </p>
+                        <select class="inp-block" id="orderCount" asp-for="@Model.OrderCount">
+                            @for(var x =1; x <= (Model.CardInfo.Inventory > 5 ? 5 : Model.CardInfo.Inventory); x++)
+                            {
+                                <option value="@x">@x</option>
+                            }
                         </select>
-                    </section>
-                    @*<h4>优惠活动</h4>
-                    <p>
-                        全站买1111减111<br />
-                        11/1-11/11,拍即享原价75折
-                    </p>*@
-                    <section class="info-action">
-                        <button type="button" class="btn-active" onclick="AddToCart();">加入购物车</button>
-                        <button type="button" class="btn-action" onclick="AddToCart();window.location='/cart';">立即购买</button>
-                    </section>
+                        
+                        <section class="info-action">
+                            <button class="ui blue button" type="submit" asp-page-handler="AddToCartBySession">加入購物車(Session)</button>
+                        </section>
+                    </form>
                 </div>
             </section>
             @*product-intro 商品介绍*@
             <section class="product-intro">
                 <h3><em>商品介绍</em><span></span></h3>
                 <div class="intro-detial">
-                    @*<asp:Literal runat="server" ClientIDMode="Static" ID="ltDesc"></asp:Literal>*@
-                    <p>文案及规格简述</p>
+                    <p>卡片及規格</p>
                     <p>
-                        <img src="img/ill_prodintro1.jpg" alt="" />
+                        <img class="product_img" src="img/ill_prodintro1.jpg" alt="" />
                     </p>
                 </div>
             </section>
-            @*product-related 相关商品*@
-            <section class="product-related">
-                <h3><em>相关商品</em><span></span></h3>
-                <ul class="list-related">
-                    <li>
-                        <div class="prod">
-                            <a href="product" class="prod-photo" style="background-image: url(img/ill_prod1.png);"></a>
-                            <section class="prod-info">
-                                <a href="product" class="prod-name">产品名称</a>
-                                <p class="prod-price">
-                                    <span class="price-orignal">500</span>
-                                    <span class="price-discount">300</span>
-                                </p>
-                            </section>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="prod">
-                            <a href="product" class="prod-photo" style="background-image: url(img/ill_prod2.png);"></a>
-                            <section class="prod-info">
-                                <a href="product" class="prod-name">产品名称</a>
-                                <p class="prod-price">
-                                    <span class="price-orignal">500</span>
-                                    <span class="price-discount">300</span>
-                                </p>
-                            </section>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="prod">
-                            <a href="product" class="prod-photo" style="background-image: url(img/ill_prod3.png);"></a>
-                            <section class="prod-info">
-                                <a href="product" class="prod-name">产品名称</a>
-                                <p class="prod-price">
-                                    <span class="price-orignal">500</span>
-                                    <span class="price-discount">300</span>
-                                </p>
-                            </section>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="prod">
-                            <a href="product" class="prod-photo" style="background-image: url(img/ill_prod4.png);"></a>
-                            <section class="prod-info">
-                                <a href="product" class="prod-name">产品名称</a>
-                                <p class="prod-price">
-                                    <span class="price-count">300</span>
-                                </p>
-                            </section>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="prod">
-                            <a href="product" class="prod-photo" style="background-image: url(img/ill_prod1.png);"></a>
-                            <section class="prod-info">
-                                <a href="product" class="prod-name">产品名称</a>
-                                <p class="prod-price">
-                                    <span class="price-orignal">500</span>
-                                    <span class="price-discount">300</span>
-                                </p>
-                            </section>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="prod">
-                            <a href="product" class="prod-photo" style="background-image: url(img/ill_prod2.png);"></a>
-                            <section class="prod-info">
-                                <a href="product" class="prod-name">产品名称</a>
-                                <p class="prod-price">
-                                    <span class="price-orignal">500</span>
-                                    <span class="price-discount">300</span>
-                                </p>
-                            </section>
-                        </div>
-                    </li>
-                </ul>
-            </section>
+            
         </article>
         @*/product 产品*@
     </div>

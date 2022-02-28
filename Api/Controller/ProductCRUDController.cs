@@ -91,13 +91,13 @@ namespace AliveStoreTemplate.Api.Controllers
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult DeleteProduct([FromBody]int productId, string ImgUrl)
+        public IActionResult DeleteProduct([FromBody]string productId, string ImgUrl)
         {
             try
             {
                 DeleteProductReqModel Req = new DeleteProductReqModel()
                 {
-                    productId = productId,
+                    ProductId = productId,
                     ImgUrl = ImgUrl
                 };
                 return Ok(_productService.DeleteProduct(Req));

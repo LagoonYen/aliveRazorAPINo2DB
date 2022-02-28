@@ -109,8 +109,7 @@
 
     function AddNewAbility(){
         let x = ($("#abilityDiv").children().length != 0) ? parseInt($("#abilityDiv").children().last("div").attr("id").substring(7)) + 1 : 0
-        console.log("New", x)
-        if(x>3){
+        if(x>2){
             console.log("新增太多特性了")
             return;
         }
@@ -124,9 +123,8 @@
     }
 
     function AddNewMove(){
-        let x = parseInt($("#moveDiv").children().last("div").attr("id").substring(4)) + 1
-        console.log("New", x)
-        if(x>3){
+        let x = ($("#moveDiv").children().length != 0) ? parseInt($("#moveDiv").children().last("div").attr("id").substring(4)) + 1 : 0
+        if(x>2){
             console.log("新增太多招式了")
             return;
         }

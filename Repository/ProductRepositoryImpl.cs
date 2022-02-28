@@ -9,9 +9,19 @@ namespace AliveStoreTemplate.Repository
 {
     public class ProductRepositoryImpl : ProductRepository
     {
-        public void DeleteProduct(int productId)
+        public void DeleteProduct(string productId)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                No2DB.Transaction.Operator op = new No2DB.Transaction.Operator("aaa");
+                var collection = new DRole("PokemonCardInfo");
+                op.Delete(collection, "Product", productId);
+                op.Done();
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public ProductList GetProductInfoById(string ProductId)
@@ -80,6 +90,26 @@ namespace AliveStoreTemplate.Repository
                 }
 
                 return null;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public IEnumerable<ProductList> SearchProductInfo(string SearchString)
+        {
+            try
+            {
+                var collection = new DRole("PokemonCardInfo");
+
+                var allObjList = collection.Query<ProductList>("Product").AllDatas();
+                List<ProductList> SearchObj = new List<ProductList>();
+
+                //先找到該署性是否有東西 再查詢是否相同
+                var objs = allObjList.Where(x => x.Abilities.Count(c => c.AbilityName == SearchString) > 0);
+
+                return objs;
             }
             catch
             {
