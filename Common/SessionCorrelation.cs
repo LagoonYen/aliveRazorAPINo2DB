@@ -35,18 +35,36 @@ namespace AliveStoreTemplate.Common
         public const string shopcarSession = "MyUserShopcar";
     }
 
-    public class OrderItem
+    public class CartItem
     {
-        public int Id { get; set; }
-        public int OrderId { get; set; }
-        public int ProductId { get; set; }  //商品ID
-        public int Amount { get; set; }     //數量
-        public int SubTotal { get; set; }   //小計
+        //商品ID
+        public string ProductId { get; set; }
+        //數量
+        public int Amount { get; set; }
+        //單價
+        public int Price { get; set; }
+        //小計
+        public int SubTotal { get; set; }
     }
 
-    public class CartItem : OrderItem
+    public class ProductInSession
     {
-        public ProductList Product { get; set; } //商品內容
-        public string ImgSrc { get; set; } //商品圖片
+        public string ProductId { get; set; }
+
     }
+
+    //public class OrderItem
+    //{
+    //    public int Id { get; set; }
+    //    public int OrderId { get; set; }
+    //    public string ProductId { get; set; }  //商品ID
+    //    public int Amount { get; set; }     //數量
+    //    public int SubTotal { get; set; }   //小計
+    //}
+
+    //public class CartItem : OrderItem
+    //{
+    //    public ProductList Product { get; set; } //商品內容
+    //    public string ImgSrc { get; set; } //商品圖片
+    //}
 }

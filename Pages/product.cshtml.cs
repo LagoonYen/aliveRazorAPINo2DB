@@ -53,9 +53,14 @@ namespace AliveStoreTemplate.Pages
             //建立下訂商品
             CartItem item = new CartItem
             {
-                Product = result.Results.FirstOrDefault(),
+                //商品ID
+                ProductId = result.Results.FirstOrDefault().ProductId,
+                //下訂數量
                 Amount = OrderCount,
-                SubTotal = result.Results.FirstOrDefault().Price * OrderCount
+                //小計
+                SubTotal = result.Results.FirstOrDefault().Price * OrderCount,
+                //單價
+                Price = result.Results.FirstOrDefault().Price
             };
 
             //判斷是否有購物車
@@ -71,7 +76,7 @@ namespace AliveStoreTemplate.Pages
                 //如果購物車存在
                 List<CartItem> cart = Common.CommonUtil.SessionGetObject<List<CartItem>>(HttpContext.Session, "cart");
                 //檢查購物車中是否包含同樣商品
-                int index = cart.FindIndex(x => x.Product.ProductId.Equals(CardInfo.ProductId));
+                int index = cart.FindIndex(x => x.ProductId.Equals(CardInfo.ProductId));
                 if (index != -1)
                 {
                     cart[index].Amount += item.Amount;
@@ -83,6 +88,9 @@ namespace AliveStoreTemplate.Pages
                 }
                 Common.CommonUtil.SessionSetObject(HttpContext.Session, "cart", cart);
             }
+
+            //Test
+            List<CartItem> testObj = Common.CommonUtil.SessionGetObject<List<CartItem>>(HttpContext.Session, "cart");
 
             Response.Redirect("product?productId=" + CardInfo.ProductId);
         }

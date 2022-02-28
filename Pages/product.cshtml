@@ -12,7 +12,6 @@
             <a href="/">HOME</a>
             <a asp-page="category" asp-route-category="@Model.CardInfo.Category" asp-route-subCategory="">@Model.CardInfo.Category</a>
             <a asp-page="category" asp-route-category="@Model.CardInfo.Category" asp-route-subCategory="@Model.CardInfo.Subcategory">@Model.CardInfo.Subcategory</a>
-            @*<a href="/">HOME</a><a href="category?pid=<%=FCate.Id %>"><%=FCate.Name %></a><a href="category?pid=<%=FCate.Id %>"><%=Cate.Name %></a>*@
         </section>
         @* /path 路径*@
         @*product 产品*@
@@ -31,15 +30,20 @@
                     <form class="ui form" method="post">
                         <h2 class="info-tit" id="info-tit">@Model.CardInfo.CardName</h2>
                         <input type="hidden" asp-for="@Model.CardInfo.ProductId"/>
-                        @foreach(var item in @Model.CardInfo.Abilities)
-                        {
-                            <p style="color:red">特性：</p><p class="info-intro" id="info-intro">@item.AbilityName</p>
-                            <p class="info-intro" id="info-intro">@item.AbilityDesc</p>
+                        @if(@Model.CardInfo.Abilities != null){
+                            @foreach(var item in @Model.CardInfo.Abilities)
+                            {
+                                <p style="color:red">特性：</p><p class="info-intro" id="info-intro">@item.AbilityName</p>
+                                <p class="info-intro" id="info-intro">@item.AbilityDesc</p>
+                            }
                         }
-                        @foreach(var item in @Model.CardInfo.Moves)
+                        @if (@Model.CardInfo.Moves != null)
                         {
-                            <p style="color:green">招式：</p><p class="info-intro" id="info-intro">@item.MoveName</p>
-                            <p class="info-intro" id="info-intro">@item.MoveDesc</p>
+                            @foreach(var item in @Model.CardInfo.Moves)
+                            {
+                                <p style="color:green">招式：</p><p class="info-intro" id="info-intro">@item.MoveName</p>
+                                <p class="info-intro" id="info-intro">@item.MoveDesc</p>
+                            }                            
                         }
                         <p class="info-intro" id="info-intro">血量：@Model.CardInfo.HP</p>
                         <p class="info-price">
