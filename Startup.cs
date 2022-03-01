@@ -74,8 +74,8 @@ namespace AliveStoreTemplate
             services.AddScoped<ProductRepository, ProductRepositoryImpl>();
             //services.AddScoped<ShopCarService, ShopCarServiceImpl>();
             //services.AddScoped<ShopCarRepository, ShopCarRepositoryImpl>();
-            //services.AddScoped<OrderService, OrderServiceImpl>();
-            //services.AddScoped<OrderRepository, OrderRepositoryImpl>();
+            services.AddScoped<OrderService, OrderServiceImpl>();
+            services.AddScoped<OrderRepository, OrderRepositoryImpl>();
 
             //services.AddTransient<ShopContext>();
         }

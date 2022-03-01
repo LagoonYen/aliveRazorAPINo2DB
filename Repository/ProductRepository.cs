@@ -1,4 +1,5 @@
 ﻿using AliveStoreTemplate.Model;
+using AliveStoreTemplate.Model.DTOModel;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace AliveStoreTemplate.Repositories
         public ProductList GetProductInfoById(string id);
 
         public void PatchProduct(ProductList product);
+
+        public void PatchProductInventory(PatchProductInventoryConditionModel ProductInfo);
 
         public void InsertProduct(ProductList product);
 

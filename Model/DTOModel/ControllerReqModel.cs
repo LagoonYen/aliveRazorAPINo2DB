@@ -44,27 +44,29 @@ namespace AliveStoreTemplate.Model.DTOModel
     /// <summary>
     /// Order相關
     /// </summary>
-    //public class ToOrderReqModel
-    //{
-    //    public int Uid { get; set; }
-    //    public class OrderDetail
-    //    {
-    //        public int ProductId { get; set; }
-    //        public int ProductNum { get; set; }
-    //        public int ProductPrice { get; set; }
-    //    }
-    //    public string OrderName { get; set; }
-    //    public string OrderPhoneNumber { get; set; }
-    //    public string OrderCity { get; set; }
-    //    public string OrderTown { get; set; }
-    //    public string OrderAddress { get; set; }
-    //    public string Remark { get; set; }
-    //}
+    public class ToOrderReqModel
+    {
+        public List<Items> ProductList { get; set; }
+        public string BuyerName { get; set; }
+        public string BuyerMobile { get; set; }
+        public string BuyerAddress { get; set; }
+        public string BuyerRemark { get; set; }
+        //public int BuyerAddressCityCode { get; set; }
+        //public int BuyerAddressTownCode { get; set; }
+        public string BuyerAddressCity { get; set; }
+        public string BuyerAddressTown { get; set; }
+        public string PaymentType { get; set; }
+    }
 
-    //public class OrderDetailReqModel
-    //{
-    //    public int OrderId { get; set; }
-    //}
+    public class OrderDetailReqModel
+    {
+        public int OrderId { get; set; }
+    }
+
+    public class GetOrderListReqModel
+    {
+        public string PhoneNo { get; set; }
+    }
 
     //public class OrderDetailResponseModel
     //{
@@ -122,14 +124,6 @@ namespace AliveStoreTemplate.Model.DTOModel
 
         public int OrderNum { get; set; }
         public int Price { get; set; }
-        //"ProductId": "a3279dae3b0542b6a353e87d921da95b",
-        //"ProductSpecId": "7273d54adaa44bc88bd7fc3c7518c752",
-        //"ProductName": "Bose｜SoundSport运动无线蓝牙耳机",
-        //"Price": 1409,
-        //"ProductSpecName": "蓝色",
-        //"storageQuantity": 1,
-        //"BuyQuantity": "1",
-        //"TotalPrice": 1409
     }
 
     public class DelFromCarReqModel

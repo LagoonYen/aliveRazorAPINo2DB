@@ -351,6 +351,100 @@
             })
         }
 
+        //結算購物車
+        function PlaceOrder(){
+            let cartData = GetProductFromCarBySession()
+            //購物車沒商品
+            if(cartData == undefined){
+                alert("請添加商品至購物車")
+                return
+            }
+
+            //訂單地址不全
+            if($("#inputRecipient").val() == "" 
+            || $("#inputRecipientPhone").val() == "" 
+            || $("#inputRecipientAddr").val() == "" 
+            || $(".city").val() == "" 
+            || $(".town").val() == ""){
+                alert("請完成收件資訊")
+                return
+            }
+            
+            //付款方式未選擇
+            if($("#selectPayment").val() == ""){
+                alert("請選擇付款方式")
+                return
+            }
+
+            //製作商品細節
+            let productList = []
+
+            for(let x = 0; x < cartData.length; x++){
+
+                //取得商品
+                let product = GetProductById(cartData[x].productId)
+
+                let productDetail = {
+                    "ProductId": cartData[x].productId,
+                    "ProductName": product.cardName,
+                    "Price": product.price,
+                    "BuyInventory": cartData[x].amount,
+                    "TotalPrice": cartData[x].subTotal
+                }
+
+                productList.push(productDetail)
+            }
+
+            let formdata = {
+                "BuyerName": $("#inputRecipient").val(),
+                "BuyerMobile": $("#inputRecipientPhone").val(),
+                "BuyerAddress": $("#inputRecipientAddr").val(),
+                "BuyerRemark": $("#areaRemark").val(),
+                //"BuyerAddressCityCode": $(".city").val(),
+                //"BuyerAddressTownCode": $(".town").val(),
+                "BuyerAddressCity": $(".city option:selected").text(),
+                "BuyerAddressTown": $(".town option:selected").text(),
+                "ProductList": productList,
+                "PaymentType": $("#selectPayment").val()
+            }
+
+            //訂單詳細情況
+            console.log("訂單詳細情況", formdata)
+
+            $.ajax({
+                type:"Post",
+                url:"@Url.Action("ToOrder","Order")",
+                data:JSON.stringify(formdata),
+                processData : false, 
+                contentType : 'application/json;charset=UTF-8',
+                success:function(response){
+                    console.log("二次已連上PlaceOrder", response)
+                    alert("訂單已成立")
+                    CleanCar()
+                    location.href = "./Home"
+                },
+                error:function(response){
+                    alert("找不到")
+                }
+            })
+        }
+
+        //清空購物車
+        function CleanCar(){
+            $.ajax({
+                type:"Delete",
+                url:"@Url.Action("CleanShopcar","Session")",
+                processData : false, 
+                contentType : 'application/json;charset=UTF-8',
+                success:function(){
+                    console.log("二次已連上CleanShopcar")
+                },
+                error:function(response){
+                    console.log("找不到")
+                }
+            })
+        }
+
 
     </script>
 

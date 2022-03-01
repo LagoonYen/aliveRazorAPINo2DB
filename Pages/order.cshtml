@@ -9,120 +9,175 @@
     <div class="content-con">
         <h2 class="page-tit"><em>订单列表</em><span>你的历史订单</span></h2>
         <section class="order-list">
-            <table class="tab-basic">
+            <table class="tab-basic ui sortable celled table">
                 <thead>
                     <tr>
                         <th class="td-left">订单编号</th>
-                        <th>付款状态</th>
-                        <th>物流状态</th>
-                        <th>总金额</th>
+                        <th class="">付款状态</th>
+                        <th class="">物流状态</th>
+                        <th class="">总金额</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @*
-                    <asp:Literal runat="server" ClientIDMode="Static" ID="Plist"></asp:Literal>*@
-                    <tr>
-                        <td>
-                            <a href="order_detial">161102125701</a>
-                        </td>
-                        <td class="td-status">
-                            <span class="status-solved">已完成</span>
-                        </td>
-                        <td class="td-trans">运送中</td>
-                        <td class="td-price"><span>100</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="order_detial">161102125701</a>
-                        </td>
-                        <td class="td-status">
-                            <span class="status-processing">处理中</span>
-                        </td>
-                        <td class="td-trans">已送达</td>
-                        <td class="td-price"><span>100</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="order_detial">161102125701</a>
-                        </td>
-                        <td class="td-status">
-                            <span class="status-solved">已完成</span>
-                        </td>
-                        <td class="td-trans">运送中</td>
-                        <td class="td-price"><span>100</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="order_detial">161102125701</a>
-                        </td>
-                        <td class="td-status">
-                            <span class="status-processing">处理中</span>
-                        </td>
-                        <td class="td-trans">运送中</td>
-                        <td class="td-price"><span>100</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="order_detial">161102125701</a>
-                        </td>
-                        <td class="td-status">
-                            <span class="status-solved">已完成</span>
-                        </td>
-                        <td class="td-trans">已送达</td>
-                        <td class="td-price"><span>100</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="order_detial">161102125701</a>
-                        </td>
-                        <td class="td-status">
-                            <span class="status-processing">处理中</span>
-                        </td>
-                        <td class="td-trans">运送中</td>
-                        <td class="td-price"><span>100</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="order_detial">161102125701</a>
-                        </td>
-                        <td class="td-status">
-                            <span class="status-solved">已完成</span>
-                        </td>
-                        <td class="td-trans">运送中</td>
-                        <td class="td-price"><span>100</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="order_detial">161102125701</a>
-                        </td>
-                        <td class="td-status">
-                            <span class="status-processing">处理中</span>
-                        </td>
-                        <td class="td-trans">已送达</td>
-                        <td class="td-price"><span>100</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="order_detial">161102125701</a>
-                        </td>
-                        <td class="td-status">
-                            <span class="status-solved">已完成</span>
-                        </td>
-                        <td class="td-trans">已送达</td>
-                        <td class="td-price"><span>100</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="order_detial">161102125701</a>
-                        </td>
-                        <td class="td-status">
-                            <span class="status-processing">处理中</span>
-                        </td>
-                        <td class="td-trans">运送中</td>
-                        <td class="td-price"><span>100</span></td>
-                    </tr>
+                <tbody id="OrderTbody">
+                    
                 </tbody>
             </table>
         </section>
     </div>
 </article>
+
+<script>
+    //商店名稱
+    var merchantId = "alive"
+    var phoneNo
+
+    $(function(){
+        //取得parameter
+        let getUrlString = location.href;
+        let url = new URL(getUrlString);
+
+        //當前購物者電話
+        phoneNo = url.searchParams.get('phoneNo').toString()
+
+        var orderList = GetOrderList(phoneNo)
+
+        BulidOrderListView(orderList)
+    })
+
+    //取得訂單列表
+    function GetOrderList(phoneNo){
+        let data = false
+        console.log(phoneNo)
+        $.ajax({
+            type:"Post",
+            url:"@Url.Action("GetOrderList","Order")",
+            data:JSON.stringify({
+                'PhoneNo':phoneNo
+            }),
+            processData : false, 
+            contentType : 'application/json;charset=UTF-8',
+            dataType:"json",
+            async:false,  //可能不好
+            success:function(response){
+                console.log("二次已連上GetOrderList", response)
+                data = response
+            },
+            error:function(response){
+                console.log("找不到")
+            }
+        })
+        return data
+    }
+
+    //建立訂單畫面
+    function BulidOrderListView(orderList){
+        console.log(orderList)
+        if(orderList.results != null){
+            orderList.results.forEach(x =>{
+                console.log("每筆訂單資料", x)
+                //console.log(x.OrderStatus, x["OrderStatus"])
+
+                //訂單狀態
+                //let orderStatus
+                //switch(x["OrderStatus"]){
+                //    case 0 : orderStatus = "處理中"
+                //        break;
+                //    case 1 : orderStatus = "已完成"
+                //        break;
+                //    case 2 : orderStatus = "已退款"
+                //        break;
+                //    case 3 : orderStatus = "已建立"
+                //        break;
+                //}
+
+                //let payStatus
+                //switch(x.PayStatus){
+                //    case 0 : payStatus = "未付款"
+                //        break;
+                //    case 1 : payStatus = "已付款"
+                //        break;
+                //}
+
+                //let shipStatus
+                //switch(x.ShipStatus){
+                //    case 0 : shipStatus = "未出貨"
+                //        break;
+                //    case 1 : shipStatus = "已出貨"
+                //        break;
+                //}
+
+                //let paymentType
+                //switch(x.PaymentType){
+                //    case 0 : paymentType = "CC"
+                //        break;
+                //    case 1 : paymentType = "ATM"
+                //        break;
+                //    case 2 : paymentType = "MMK"
+                //        break;
+                //    case 3 : paymentType = "CGP"
+                //        break;
+                //    case 4 : paymentType = "USDT"
+                //        break;
+                //    case 5 : paymentType = "BTC"
+                //        break;
+                //    case 6 : paymentType = "ETH"
+                //        break;
+                //}
+
+
+                //if(payStatus=="未付款"){
+                //    var QRCode = (x.PaymentInfo) ? x.PaymentInfo : ""
+                //}
+
+                //let tr = $(`<tr></tr>`)
+                //let tdOrderId = $(`<td><a onclick="goOrderDetial()" data-orderid="${x["OrderId"]}">${x["OrderId"]}</td>`)
+                ////let tdpayStatus = (payStatus == "未付款") ? 
+                ////                    (QRCode == "") ? 
+                ////                        $(`<td class="td-status negative"><i class="icon close"></i><span class="status-solved">${payStatus} / 缺少付款碼 </span></td>`) :
+                ////                        $(`<td class="td-status warning"><i class="arrow alternate circle right icon"></i><span class="status-solved">${payStatus} / <a href="${QRCode}">二維碼</a></span></td>`) : 
+                ////                            $(`<td class="td-status "><i class="icon checkmark"></i><span class="status-solved">${payStatus}</span></td>`)
+                //let tdtrans = $(`<td class="td-trans">${shipStatus}</td>`)
+                //let tdprice = $(`<td class="td-price"><span>${x["TotalPrice"]}</span></td>`)
+
+                //tr.append(tdOrderId).append(tdpayStatus).append(tdtrans).append(tdprice)
+
+                $("#OrderTbody").append(`<tr>
+                    <td><a onclick="goOrderDetial()" data-orderid="${x["buyerName"]}">${x["buyerName"]}</td>
+                    <td class="td-status "><i class="icon checkmark"></i><span class="status-solved"></span></td>
+                    <td class="td-trans">${x["totalPrice"]}</td>
+                    <td class="td-price"><span>${x["paymentType"]}</span></td>
+                </tr>`)
+            })
+        }
+        
+        
+    }
+
+    function goOrderDetial(){
+        let $this = $(event.target)
+        let orderId = $this.data("orderid")
+        window.location.href = "order_detial?orderId=" + orderId + "&phoneNo=" + phoneNo
+    }
+
+    //function GetQRCode(phoneNo, orderId){
+    //    let data = false
+    //    $.ajax({
+    //        type:"Get",
+    //        url:"https://localhost:44302/api/Order/GetOrderByOrderId?merchantId=" + merchantId + "&phoneNo=" + phoneNo + "&orderId=" + orderId,
+    //        processData : false, 
+    //        contentType : 'application/json;charset=UTF-8',
+    //        dataType:"json",
+    //        async:false,  //可能不好
+    //        success:function(response){
+    //            console.log("三次已連上GetOrderByOrderId", response)
+    //            data = response
+    //        },
+    //        error:function(response){
+    //            console.log("找不到")
+    //        }
+    //    })
+    //    return data
+    //}
+</script>
+
+

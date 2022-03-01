@@ -1,4 +1,5 @@
 ﻿using AliveStoreTemplate.Model;
+using AliveStoreTemplate.Model.DTOModel;
 using AliveStoreTemplate.Repositories;
 using No2DB.Base;
 using System;
@@ -61,6 +62,28 @@ namespace AliveStoreTemplate.Repository
             {
                 var collection = new DRole("PokemonCardInfo");
                 collection.GetOp("Product").Update(product.ProductId, product);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public void PatchProductInventory(PatchProductInventoryConditionModel ProductInfo)
+        {
+            try
+            {
+                var productId = ProductInfo.ProductId;
+                var inventory = ProductInfo.Inventory;
+                No2DB.Transaction.Operator op = new No2DB.Transaction.Operator("aaa");
+
+                var collection = new DRole("PokemonCardInfo");
+                var obj = collection.GetQ<ProductList>("Product").DataByKey(productId);
+
+                obj.Inventory = inventory;
+
+                op.Update(collection, "Product", productId, obj);
+                op.Done();
             }
             catch
             {

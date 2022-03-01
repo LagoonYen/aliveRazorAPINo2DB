@@ -7,17 +7,27 @@
   @*inquire 订单查询*@
 <article class="page inquire">
     <div class="content-con">
-        <h2 class="page-tit"><em>订单查询</em><span>查询你的订单</span></h2>
+        <h2 class="page-tit"><em>訂單查詢</em><span>查詢你的訂單</span></h2>
         <section class="forms-basic inquire-form">
             <p>
-                <input type="tel" value="" placeholder="请输入你的手机号" id="phone" runat="server" />
+                <input type="tel" value="" placeholder="請輸入手機號碼" id="phone" runat="server" />
             </p>
-            @*<p>
-                <input type="tel" value="" placeholder="请输入你的邮箱" />
-            </p>*@
             <p class="inquire-action">
-                <a href="order" class="btn-active">查询</a>
+                <a onclick="goOrder()" class="btn-active">查詢</a>
             </p>
         </section>
     </div>
 </article>
+
+<script>
+    
+    $(function(){
+
+    })
+
+    function goOrder(){
+        let phoneNo = $("#phone").val()
+        window.location.href = "order?phoneNo="+phoneNo
+    }
+
+</script>
