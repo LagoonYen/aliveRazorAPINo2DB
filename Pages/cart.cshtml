@@ -47,8 +47,10 @@
             <dl>
                 <dt>收件人地址<em class="must">*</em></dt>
                 <dd>
-                    <div id="post" class="citys">
-                        <select class="ui dropdown" style="min-width:80px" name="province" onchange="GetCityList()" id="province">
+                    @*<div id="post" class="citys">*@
+                        @*收件人地址選擇*@
+                        <div id="twzipcode"></div>
+                        @*<select class="ui dropdown" style="min-width:80px" name="province" onchange="GetCityList()" id="province">
                             <option value="">請選擇</option>
                         </select>
                         <select class="ui dropdown" style="min-width:80px" name="city" onchange="GetCountryList()" id="city">
@@ -59,10 +61,10 @@
                         </select>
                         <select class="ui dropdown" style="min-width:80px" name="town" onchange="BuildAddr()" id="town">
                             <option value="">請選擇</option>
-                        </select>
+                        </select>*@
                         @*<input class="form-control" type="text" id="addr" />*@
-                        <input class="" type="text" value="" id="inputRecipientAddr" placeholder="请填入地址" />
-                    </div>
+                        <input class="" type="text" value="" id="inputRecipientAddr" placeholder="請填入地址" />
+                    @*</div>*@
                 </dd>
                 <dt>备注</dt>
                 <dd>
@@ -155,6 +157,8 @@
 
             //建立地址Select
             //GetProvinceList()
+            BuildAddress()
+
         });
 
         //取得購物車
@@ -181,6 +185,7 @@
         //建立購物車畫面
         function BuildCarView(response){
             console.log("建立購物車", response)
+            //清空購物車畫面
             $("#tbOrder").empty()
 
             let allProductTotalPrice = 0
@@ -194,8 +199,6 @@
                     
                     //全部價錢加總
                     allProductTotalPrice += x.subTotal
-
-                    //console.log("二次Ajax", x, Product, ProductSpec, SelectedSpec, productSpecId)
 
                     let trTbody = $(`<tr></tr>`)
                     trTbody
@@ -257,120 +260,96 @@
             return data
         }
 
-        ////取得縣市
-        //function GetProvinceList(){
-        //    $.ajax({
-        //        type:"Get",
-        //        url:"https://localhost:44302/api/Order/GetProvinceList",
-        //        processData : false, 
-        //        contentType : 'application/json;charset=UTF-8',
-        //        dataType:"json",
-        //        success:function(response){
-        //            console.log("二次已連上GetProvinceList", response)
+        function BuildAddress(){
+            $("#twzipcode").twzipcode({
+                zipcodeIntoDistrict: true, // 郵遞區號自動顯示在區別選單中
+                css: ["city form-control", "town form-control"], // 自訂 "城市"、"地別" class 名稱 
+                countyName: "city", // 自訂城市 select 標籤的 name 值
+                districtName: "town" // 自訂區別 select 標籤的 name 值
+            });
+        }
 
-        //            response.forEach(x =>{
-        //                $("#province").append(`<option value="${x["id"]}" >${x["name"]}</option>`)
-        //            })
-        //        },
-        //        error:function(response){
-        //            console.log("找不到")
-        //        }
-        //    })
-        //}
+         //將購物車內商品移除
+        function DelProductfromCarBySession(productId){
+            $.ajax({
+                type:"Post",
+                url:"@Url.Action("DelProductfromCarBySession","Session")",
+                data:JSON.stringify({
+                    'ProductId' : productId
+                }),
+                processData : false, 
+                contentType : 'application/json;charset=UTF-8',
+                success:function(){
+                    //重構購物車
+                    let result = GetProductFromCarBySession()
+                    
+                    BuildCarView(result)
+                },
+                error:function(response){
+                    console.log("找不到")
+                }
+            })
+        }
 
-        ////取得城鎮鄉鎮
-        //function GetCityList(){
-        //    let province = $("#province").val()
-        //    $.ajax({
-        //        type:"Get",
-        //        url:"https://localhost:44302/api/Order/GetCityList?lastLevelId=" + province,
-        //        processData : false, 
-        //        contentType : 'application/json;charset=UTF-8',
-        //        dataType:"json",
-        //        success:function(response){
-        //            console.log("二次已連上GetCityList", response)
-        //            let option = (`<option value="">請選擇</option>`)
-        //            $("#city").empty();
-        //            $("#city").append(option)
-        //            $("#area").empty();
-        //            $("#area").append(option)
-        //            $("#town").empty()
-        //            $("#town").append(option)
+        //判定增減商品數量
+        function OrderNumChange(){
+            let $this = $(event.target)
+            //符號, 商品id, 商品規格, 目前購物車內數量, 物品上限
+            let symbol = $this.data("symbol")
+            let productId = $this.data("productid")
+            let countNow = parseInt($this.parent().siblings(".CountInput").val()) //用不到
+            let quantity = $this.data("selectedspecquantity")  //用不到
+            console.log("符號, 商品id, 商品規格, 目前購物車內數量, 物品上限", symbol, productId, countNow, quantity)
 
-        //            response.forEach(x =>{
-        //                $("#city").append(`<option value="${x["id"]}" >${x["name"]}</option>`)
-        //            })
-        //        },
-        //        error:function(response){
-        //            console.log("找不到")
-        //        }
-        //    })
-        //}
+            //Debounce運用
+            //先製作匿名func 在製作延遲時間 後放入使用位置
+            let delFunc = function(){
+                DelProductfromCarBySession(productId)
+            }
+            let updateFunc = function(){
+                UpdateCart(productId, symbol)
+            }
 
-        ////取得地區
-        //function GetCountryList(){
-        //    let city = $("#city").val()
-        //    $.ajax({
-        //        type:"Get",
-        //        url:"https://localhost:44302/api/Order/GetCountyList?lastLevelId=" + city,
-        //        processData : false, 
-        //        contentType : 'application/json;charset=UTF-8',
-        //        dataType:"json",
-        //        success:function(response){
-        //            console.log("二次已連上GetCountyList", response)
-        //            let option = (`<option value="">請選擇</option>`)
-        //            $("#area").empty();
-        //            $("#area").append(option)
-        //            $("#town").empty()
-        //            $("#town").append(option)
+            let delDebounce = _.debounce(delFunc, 500)
+            let updateDebounce = _.debounce(updateFunc, 500)
+            //判斷+-
+            countNow = (symbol == "plus") ? countNow + 1 : countNow -1
+            //判斷結果做事
+            if(countNow > quantity){
+                return
+            }
+            else if(countNow == 0){
+                $this.parent().siblings(".CountInput").attr("value", countNow)
+                
+                delDebounce()
+            }
+            else{
+                $this.parent().siblings(".CountInput").attr("value", countNow)
+                
+                updateDebounce()
+            }
+        }
 
-        //            response.forEach(x =>{
-        //                $("#area").append(`<option value="${x["id"]}" >${x["name"]}</option>`)
-        //            })
-        //        },
-        //        error:function(response){
-        //            console.log("找不到")
-        //        }
-        //    })
-        //}
-        
-        ////取得路名
-        //function GetTownList(){
-        //    let area = $("#area").val()
-        //    $.ajax({
-        //        type:"Get",
-        //        url:"https://localhost:44302/api/Order/GetTownList?lastLevelId=" + area,
-        //        processData : false, 
-        //        contentType : 'application/json;charset=UTF-8',
-        //        dataType:"json",
-        //        success:function(response){
-        //            console.log("二次已連上GetTownList", response)
-        //            let option = (`<option value="">請選擇</option>`)
-        //            $("#town").empty()
-        //            $("#town").append(option)
-
-        //            response.forEach(x =>{
-        //                $("#town").append(`<option value="${x["id"]}" >${x["name"]}</option>`)
-        //            })
-
-        //            //自動輸入
-        //            $("#inputRecipientAddr").val($("#area  option:selected").text())
-        //        },
-        //        error:function(response){
-        //            console.log("找不到")
-        //        }
-        //    })
-        //}
-
-        ////地址完成後改變input
-        //function BuildAddr(){
-        //    let area = $("#area option:selected").text()
-        //    let town = $("#town  option:selected").text()
-        //    //自動輸入
-        //    $("#inputRecipientAddr").val(area + town)
-
-        //    console.log("地址建立完成", $("#province option:selected").text(), $("#city option:selected").text(), $("#area option:selected").text(), $("#town option:selected").text())
-        //}
+        //更新購物車單筆資料
+        function UpdateCart(productId, symbol){
+            $.ajax({
+                type:"Post",
+                url:"@Url.Action("PatchProductNumFromCarBySession","Session")",
+                data:JSON.stringify({
+                    'ProductId' : productId,
+                    'Symbol':symbol
+                }),
+                processData : false, 
+                contentType : 'application/json;charset=UTF-8',
+                success:function(response){
+                    //重構購物車
+                    BuildCarView(response)
+                },
+                error:function(response){
+                    console.log("找不到")
+                }
+            })
+        }
 
 
     </script>

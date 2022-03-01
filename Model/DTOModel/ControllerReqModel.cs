@@ -135,7 +135,6 @@ namespace AliveStoreTemplate.Model.DTOModel
     public class DelFromCarReqModel
     {
         public string ProductId { get; set; }
-        public string ProductSpecId { get; set; }
     }
 
     public class PatchFromCarReqModel : DelFromCarReqModel

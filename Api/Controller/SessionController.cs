@@ -109,7 +109,7 @@ namespace AliveStoreTemplate.Controller
                 List<CartItem> cart = Common.CommonUtil.SessionGetObject<List<CartItem>>(HttpContext.Session, "cart");
 
                 //index定位後移除
-                int index = cart.FindIndex(x => x.ProductId.Equals(Req.ProductId));
+                int index = cart.FindIndex(x => x.ProductId == Req.ProductId);
                 cart.RemoveAt(index);
 
                 // 購物車小於1項商品時移除購物車 否則重新寫入session
@@ -144,7 +144,7 @@ namespace AliveStoreTemplate.Controller
                 List<CartItem> cart = Common.CommonUtil.SessionGetObject<List<CartItem>>(HttpContext.Session, "cart");
 
                 //index定位後移除
-                int index = cart.FindIndex(x => x.ProductId.Equals(Req.ProductId));
+                int index = cart.FindIndex(x => x.ProductId == Req.ProductId);
                 if(Req.Symbol == "plus")
                 {
                     cart[index].Amount++;
