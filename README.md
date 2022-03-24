@@ -1,0 +1,2 @@
+# aliveRazorAPINo2DB
+第一次用No2DB編寫資料儲存方式
